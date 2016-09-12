@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
+// //VERIFICAR COMPLEMENTO A 2 NO IMMEDIATE;
 public class Decodificador {
 
 	private static PrintWriter out;
@@ -58,8 +59,8 @@ public class Decodificador {
 			String rd = s.substring(16, 21);
 			String shamt = s.substring(21, 26);
 			String funct = s.substring(26, 32);
-			String immediate = s.substring(16, 32);
-			//String address = s.substring(6, 32);
+			String immediate = s.substring(16, 32);// o complemento a 2 é feito com o cast (short) na conversao de imediato para int nos cases abaixo
+			// String address = s.substring(6, 32);
 
 			switch (opcode) {
 			// OPCODE = 0
@@ -152,34 +153,34 @@ public class Decodificador {
 				}
 				break;
 			case "001111": // lui
-				out.print("lui" + " $" + Integer.parseInt(rt, 2) + ", " + Integer.parseInt(immediate, 2));
+				out.print("lui" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2));
 				break;
 			case "001000": // addi
 				out.print("addi" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ Integer.parseInt(immediate, 2));
+						+ (short)Integer.parseInt(immediate, 2));
 				break;
 			case "001010": // slti
 				out.print("slti" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ Integer.parseInt(immediate, 2));
+						+ (short)Integer.parseInt(immediate, 2));
 				break;
 			case "001100": // andi
 				out.print("andi" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ Integer.parseInt(immediate, 2));
+						+ (short)Integer.parseInt(immediate, 2));
 				break;
 			case "001101": // ori
 				out.print("ori" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ Integer.parseInt(immediate, 2));
+						+ (short)Integer.parseInt(immediate, 2));
 				break;
 			case "001110": // xori
 				out.print("xori" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ Integer.parseInt(immediate, 2));
+						+ (short)Integer.parseInt(immediate, 2));
 				break;
 			case "100011": // lw
-				out.print("lw" + " $" + Integer.parseInt(rt, 2) + ", " + Integer.parseInt(immediate, 2) + "($"
+				out.print("lw" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "101011": // sw
-				out.print("sw" + " $" + Integer.parseInt(rt, 2) + ", " + Integer.parseInt(immediate, 2) + "($"
+				out.print("sw" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "000010": // j
@@ -196,18 +197,18 @@ public class Decodificador {
 				break;
 			case "001001": // addiu
 				out.print("addiu" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ Integer.parseInt(immediate, 2));
+						+ (short)Integer.parseInt(immediate, 2));
 				break;
 			case "100000": // lb
-				out.print("lb" + " $" + Integer.parseInt(rt, 2) + ", " + Integer.parseInt(immediate, 2) + "($"
+				out.print("lb" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "100100": // lbu
-				out.print("lbu" + " $" + Integer.parseInt(rt, 2) + ", " + Integer.parseInt(immediate, 2) + "($"
+				out.print("lbu" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "101000": // sb
-				out.print("sb" + " $" + Integer.parseInt(rt, 2) + ", " + Integer.parseInt(immediate, 2) + "($"
+				out.print("sb" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "000011": // jal
@@ -215,17 +216,17 @@ public class Decodificador {
 				break;
 			}
 			out.println();
-			
-//			System.out.println("Instrução " + cont);
-//			System.out.println("opcode: " + opcode);
-//			System.out.println("rs: " + rs);
-//			System.out.println("rt: " + rt);
-//			System.out.println("rd: " + rd);
-//			System.out.println("shamt: " + shamt);
-//			System.out.println("funct: " + funct);
-//			System.out.println("immediate: " + immediate);
-//			//System.out.println("address: " + address);
-//			System.out.println();
+
+			// System.out.println("Instrução " + cont);
+			// System.out.println("opcode: " + opcode);
+			// System.out.println("rs: " + rs);
+			// System.out.println("rt: " + rt);
+			// System.out.println("rd: " + rd);
+			// System.out.println("shamt: " + shamt);
+			// System.out.println("funct: " + funct);
+			// System.out.println("immediate: " + immediate);
+			// //System.out.println("address: " + address);
+			// System.out.println();
 		}
 
 		// for (String s : listaDeInstrucoes)
