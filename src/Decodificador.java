@@ -14,7 +14,8 @@ public class Decodificador {
 	// ler um arquivo "in.txt", converte o hexa para binario em um ArrayList e
 	// retorna o arrayList
 	public static ArrayList<String> lerArq() throws IOException {
-		FileReader in = new FileReader("in.txt");
+		// FileReader in = new FileReader("in.txt");
+		FileReader in = new FileReader("CODE.txt");
 		BufferedReader reader = new BufferedReader(in);
 		ArrayList<String> instrucoes = new ArrayList<String>();
 
@@ -50,7 +51,7 @@ public class Decodificador {
 		FileWriter writer = new FileWriter("out.txt");
 		out = new PrintWriter(new PrintWriter(writer));
 
-		int cont = 1;
+		// int cont = 1;
 
 		for (String s : listaDeInstrucoes) {
 			String opcode = s.substring(0, 6);
@@ -59,8 +60,12 @@ public class Decodificador {
 			String rd = s.substring(16, 21);
 			String shamt = s.substring(21, 26);
 			String funct = s.substring(26, 32);
-			String immediate = s.substring(16, 32);// o complemento a 2 é feito com o cast (short) na conversao de imediato para int nos cases abaixo
-			// String address = s.substring(6, 32);
+			String immediate = s.substring(16, 32); // o complemento a 2 é feito
+													// com o cast (short) na
+													// conversao de imediato
+													// para int nos cases abaixo
+			String branchAddr = "";
+			String address = s.substring(6, 32);
 
 			switch (opcode) {
 			// OPCODE = 0
@@ -153,66 +158,69 @@ public class Decodificador {
 				}
 				break;
 			case "001111": // lui
-				out.print("lui" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2));
+				out.print("lui" + " $" + Integer.parseInt(rt, 2) + ", " + (short) Integer.parseInt(immediate, 2));
 				break;
 			case "001000": // addi
 				out.print("addi" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ (short)Integer.parseInt(immediate, 2));
+						+ (short) Integer.parseInt(immediate, 2));
 				break;
 			case "001010": // slti
 				out.print("slti" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ (short)Integer.parseInt(immediate, 2));
+						+ (short) Integer.parseInt(immediate, 2));
 				break;
 			case "001100": // andi
 				out.print("andi" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ (short)Integer.parseInt(immediate, 2));
+						+ (short) Integer.parseInt(immediate, 2));
 				break;
 			case "001101": // ori
 				out.print("ori" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ (short)Integer.parseInt(immediate, 2));
+						+ (short) Integer.parseInt(immediate, 2));
 				break;
 			case "001110": // xori
 				out.print("xori" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ (short)Integer.parseInt(immediate, 2));
+						+ (short) Integer.parseInt(immediate, 2));
 				break;
 			case "100011": // lw
-				out.print("lw" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2) + "($"
+				out.print("lw" + " $" + Integer.parseInt(rt, 2) + ", " + (short) Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "101011": // sw
-				out.print("sw" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2) + "($"
+				out.print("sw" + " $" + Integer.parseInt(rt, 2) + ", " + (short) Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "000010": // j
-				out.print("j" + " start");
+				out.print("j 0x" + Integer.toString(Integer.parseInt(address, 2), 16));
 				break;
 			case "000001": // bltz
-				out.print("bltz" + " $" + Integer.parseInt(rs, 2) + ", start");
+				out.print("bltz" + " $" + Integer.parseInt(rs, 2) + ", "
+						+ Integer.toString(Integer.parseInt(address, 2), 16));
 				break;
 			case "000100": // beq
-				out.print("beq" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2) + ", start");
+				out.print("beq" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2) + ", 0x"
+						+ Integer.toString(Integer.parseInt(address, 2), 16));
 				break;
 			case "000101": // bne
-				out.print("bne" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2) + ", start");
+				out.print("bne" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2) + ", 0x"
+						+ Integer.toString(Integer.parseInt(address, 2), 16));
 				break;
 			case "001001": // addiu
 				out.print("addiu" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ (short)Integer.parseInt(immediate, 2));
+						+ (short) Integer.parseInt(immediate, 2));
 				break;
 			case "100000": // lb
-				out.print("lb" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2) + "($"
+				out.print("lb" + " $" + Integer.parseInt(rt, 2) + ", " + (short) Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "100100": // lbu
-				out.print("lbu" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2) + "($"
+				out.print("lbu" + " $" + Integer.parseInt(rt, 2) + ", " + (short) Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "101000": // sb
-				out.print("sb" + " $" + Integer.parseInt(rt, 2) + ", " + (short)Integer.parseInt(immediate, 2) + "($"
+				out.print("sb" + " $" + Integer.parseInt(rt, 2) + ", " + (short) Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "000011": // jal
-				out.print("jal" + " start");
+				out.print("jal 0x" + Integer.toString(Integer.parseInt(address, 2), 16));
 				break;
 			}
 			out.println();
