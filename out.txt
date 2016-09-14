@@ -1,69 +1,232 @@
 lui $1, 4097
-lw $4, 0($1)
+ori $4, $1, 64
+addiu $5, $0, 1
+addiu $2, $0, 55
+syscall
+lui $1, 4097
+ori $4, $1, 134
+addiu $5, $0, 1
+addiu $2, $0, 50
+syscall
+addi $1, $0, 0
+bne $1, $4, 84
+lui $1, 4097
+lw $16, 0($1)
 
 addi $1, $0, 4
 
-add $6, $6, $28
+add $18, $18, $28
+addiu $8, $0, 1
 lui $1, 4097
-lw $9, 4($1)
-add $4, $28, $0
-beq $4, $6, 3
-sw $9, 0($4)
-addiu $4, $4, 4
-j 1048585
+lw $9, 44($1)
+addiu $10, $0, 0
+beq $8, $9, 9
+addiu $5, $0, 4
+addiu $2, $0, 42
+syscall
+lui $1, 4097
+addu $1, $1, $10
+sw $4, 28($1)
+addi $10, $10, 4
+addi $8, $8, 1
+j 1048598
+addiu $17, $0, 0
+addiu $23, $0, 0
+lui $1, 4097
+ori $21, $1, 28
+addi $17, $17, 1
+addiu $10, $0, 0
+lui $1, 4097
+lw $9, 44($1)
+beq $17, $9, 20
+beq $17, $10, 56
+addi $10, $10, 1
+lw $8, 0($21)
+addi $21, $21, 4
+addiu $4, $0, 1500
+addiu $2, $0, 32
+syscall
+j 1048801
+addiu $4, $0, 350
+addiu $2, $0, 32
+syscall
+addi $1, $0, 0
+beq $1, $8, 115
+addi $1, $0, 1
+beq $1, $8, 127
+addi $1, $0, 2
+beq $1, $8, 139
+addi $1, $0, 3
+beq $1, $8, 151
+j 1048656
+addiu $4, $0, 60
+addiu $5, $0, 3000
+addiu $6, $0, 126
+addiu $7, $0, 100
+addiu $2, $0, 33
+syscall
+lui $1, 4097
+ori $4, $1, 192
+addiu $5, $0, 1
+addiu $2, $0, 55
+syscall
+lui $1, 4097
+ori $4, $1, 241
+addiu $2, $0, 50
+syscall
+addi $1, $0, 0
+beq $1, $4, -78
+addiu $2, $0, 10
+syscall
+addiu $4, $0, 62
+addiu $5, $0, 2000
+addiu $6, $0, 120
+addiu $7, $0, 127
+addiu $2, $0, 33
+syscall
+lui $1, 4097
+ori $4, $1, 161
+addiu $2, $0, 55
+syscall
+lui $1, 4097
+ori $4, $1, 241
+addiu $2, $0, 50
+syscall
+addi $1, $0, 0
+beq $1, $4, -96
+addiu $2, $0, 10
+syscall
+lui $1, 4097
+ori $21, $1, 28
+addiu $15, $0, 0
+beq $15, $10, -68
+addi $15, $15, 1
+lw $24, 0($21)
+addiu $2, $0, 12
+syscall
+addi $21, $21, 4
+add $25, $2, $0
+addi $1, $0, 114
+beq $1, $25, 15
+addi $1, $0, 82
+beq $1, $25, 13
+addi $1, $0, 103
+beq $1, $25, 22
+addi $1, $0, 71
+beq $1, $25, 20
+addi $1, $0, 98
+beq $1, $25, 29
+addi $1, $0, 66
+beq $1, $25, 27
+addi $1, $0, 121
+beq $1, $25, 36
+addi $1, $0, 89
+beq $1, $25, 34
+j 1048672
+addi $1, $0, 0
+bne $1, $24, -47
+addi $1, $0, 2
+
+addiu $4, $0, 68
+addiu $5, $0, 1000
+addiu $6, $0, 0
+addiu $7, $0, 127
+addiu $2, $0, 31
+syscall
+j 1048677
+addi $1, $0, 1
+bne $1, $24, -58
+addi $1, $0, 2
+
+addiu $4, $0, 69
+addiu $5, $0, 1000
+addiu $6, $0, 0
+addiu $7, $0, 127
+addiu $2, $0, 31
+syscall
+j 1048677
+addi $1, $0, 2
+bne $1, $24, -69
+addi $1, $0, 2
+
+addiu $4, $0, 70
+addiu $5, $0, 1000
+addiu $6, $0, 0
+addiu $7, $0, 127
+addiu $2, $0, 31
+syscall
+j 1048677
+addi $1, $0, 3
+bne $1, $24, -80
+addi $1, $0, 2
+
+addiu $4, $0, 71
+addiu $5, $0, 1000
+addiu $6, $0, 0
+addiu $7, $0, 127
+addiu $2, $0, 31
+syscall
+j 1048677
 lui $1, 4097
 lw $9, 8($1)
-add $4, $28, $0
-beq $4, $6, 3
-sw $9, 0($4)
-addiu $4, $4, 4
-j 1048592
-lui $1, 4097
-lw $9, 16($1)
-add $4, $28, $0
-beq $4, $6, 3
-sw $9, 0($4)
-addiu $4, $4, 4
-j 1048599
+add $16, $28, $0
+beq $16, $18, 3
+sw $9, 0($16)
+addiu $16, $16, 4
+j 1048748
+addiu $4, $0, 68
+addiu $5, $0, 1000
+addiu $6, $0, 0
+addiu $7, $0, 127
+addiu $2, $0, 31
+syscall
+j 1048617
 lui $1, 4097
 lw $9, 12($1)
-add $4, $28, $0
-beq $4, $6, 3
-sw $9, 0($4)
-addiu $4, $4, 4
-j 1048606
+add $16, $28, $0
+beq $16, $18, 3
+sw $9, 0($16)
+addiu $16, $16, 4
+j 1048762
+addiu $4, $0, 69
+addiu $5, $0, 1000
+addiu $6, $0, 0
+addiu $7, $0, 127
+addiu $2, $0, 31
+syscall
+j 1048617
 lui $1, 4097
 lw $9, 20($1)
-add $4, $28, $0
-beq $4, $6, -32
-sw $9, 0($4)
-addiu $4, $4, 4
-j 1048613
-addiu $8, $0, 10
-lui $1, 4097
-sw $8, 44($1)
-addiu $8, $0, 200
-lui $1, 4097
-sw $0, 48($1)
-lui $1, 4097
-sw $0, 40($1)
-addiu $2, $0, 0
-addiu $4, $0, 0
-addiu $5, $0, 0
+add $16, $28, $0
+beq $16, $18, 3
+sw $9, 0($16)
+addiu $16, $16, 4
+j 1048776
+addiu $4, $0, 70
+addiu $5, $0, 1000
 addiu $6, $0, 0
-addiu $7, $0, 0
-addiu $8, $0, 0
-addiu $9, $0, 0
-addiu $10, $0, 0
-addiu $11, $0, 0
-addiu $12, $0, 0
-addiu $13, $0, 0
-addiu $14, $0, 0
-addiu $15, $0, 0
-addiu $24, $0, 0
-addiu $25, $0, 0
-addiu $16, $0, 0
-addiu $17, $0, 0
-addiu $18, $0, 0
-addiu $19, $0, 0
-addiu $20, $0, 0
+addiu $7, $0, 127
+addiu $2, $0, 31
+syscall
+j 1048617
+lui $1, 4097
+lw $9, 16($1)
+add $16, $28, $0
+beq $16, $18, 3
+sw $9, 0($16)
+addiu $16, $16, 4
+j 1048790
+addiu $4, $0, 71
+addiu $5, $0, 1000
+addiu $6, $0, 0
+addiu $7, $0, 127
+addiu $2, $0, 31
+syscall
+j 1048617
+lui $1, 4097
+lw $9, 24($1)
+add $16, $28, $0
+beq $16, $18, -180
+sw $9, 0($16)
+addiu $16, $16, 4
+j 1048804
