@@ -4,35 +4,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
-import java.util.ArrayList;
 
-// //VERIFICAR COMPLEMENTO A 2 NO IMMEDIATE;
 public class Decodificador {
 
 	private static PrintWriter out;
+	private static BufferedReader reader;
 
-	// ler um arquivo "in.txt", converte o hexa para binario em um ArrayList e
-	// retorna o arrayList
-	public static ArrayList<String> lerArq() throws IOException {
-		// FileReader in = new FileReader("in.txt");
-		FileReader in = new FileReader("CODE.txt");
-		BufferedReader reader = new BufferedReader(in);
-		ArrayList<String> instrucoes = new ArrayList<String>();
-
-		String linha = reader.readLine();
-		int i = 0;
-
-		while (linha != null) {
-			instrucoes.add((new BigInteger(linha, 16)).toString(2));
-			instrucoes.set(i, complemento32bits(instrucoes.get(i)));
-			linha = reader.readLine(); // lê da segunda até a última linha
-			i++;
-		}
-
-		in.close();
-		return instrucoes;
-	}
-
+	// Complemento de 0 a frente do array binário para a quantidade de 32 bits
 	public static String complemento32bits(String bin) {
 		int tam = bin.length();
 
@@ -40,32 +18,32 @@ public class Decodificador {
 			bin = "0" + bin;
 			tam++;
 		}
-
 		return bin;
 	}
 
-	// public static void
 	public static void main(String[] args) throws IOException {
-		ArrayList<String> listaDeInstrucoes = lerArq();
-
+		//FileReader in = new FileReader("in.txt");
+		FileReader in = new FileReader("CODE.txt");
+		reader = new BufferedReader(in);
 		FileWriter writer = new FileWriter("out.txt");
 		out = new PrintWriter(new PrintWriter(writer));
+		
+		String linha = reader.readLine();
 
-		// int cont = 1;
-
-		for (String s : listaDeInstrucoes) {
-			String opcode = s.substring(0, 6);
-			String rs = s.substring(6, 11);
-			String rt = s.substring(11, 16);
-			String rd = s.substring(16, 21);
-			String shamt = s.substring(21, 26);
-			String funct = s.substring(26, 32);
-			String immediate = s.substring(16, 32); // o complemento a 2 é feito
-													// com o cast (short) na
-													// conversao de imediato
-													// para int nos cases abaixo
-			String branchAddr = "";
-			String address = s.substring(6, 32);
+		do {
+			linha = new BigInteger(linha, 16).toString(2);
+			linha = complemento32bits(linha);
+			
+			String opcode = linha.substring(0, 6);
+			String rs = linha.substring(6, 11);
+			String rt = linha.substring(11, 16);
+			String rd = linha.substring(16, 21);
+			String shamt = linha.substring(21, 26);
+			String funct = linha.substring(26, 32);
+			String immediate = linha.substring(16, 32); // o complemento a 2 é feito com o cast (short) na
+														// conversao de imediato para int nos cases abaixo
+			String address = linha.substring(6, 32);
+			String branchAddr = ""; // BranchAddr = { 14{immediate[15]}, immediate, 2’b0 }
 
 			switch (opcode) {
 			// OPCODE = 0
@@ -189,19 +167,18 @@ public class Decodificador {
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "000010": // j
-				out.print("j 0x" + Integer.toString(Integer.parseInt(address, 2), 16));
+				out.print("j " + Integer.parseInt(address, 2));
 				break;
 			case "000001": // bltz
-				out.print("bltz" + " $" + Integer.parseInt(rs, 2) + ", "
-						+ Integer.toString(Integer.parseInt(address, 2), 16));
+				out.print("bltz" + " $" + Integer.parseInt(rs, 2) + ", " + (short)Integer.parseInt(address, 2));
 				break;
 			case "000100": // beq
-				out.print("beq" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2) + ", 0x"
-						+ Integer.toString(Integer.parseInt(address, 2), 16));
+				out.print("beq" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2) + ", "
+						+ (short)Integer.parseInt(address, 2));
 				break;
 			case "000101": // bne
-				out.print("bne" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2) + ", 0x"
-						+ Integer.toString(Integer.parseInt(address, 2), 16));
+				out.print("bne" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2) + ", "
+						+ (short)Integer.parseInt(address, 2));
 				break;
 			case "001001": // addiu
 				out.print("addiu" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
@@ -220,25 +197,15 @@ public class Decodificador {
 						+ Integer.parseInt(rs, 2) + ")");
 				break;
 			case "000011": // jal
-				out.print("jal 0x" + Integer.toString(Integer.parseInt(address, 2), 16));
+				out.print("jal " + Integer.parseInt(address, 2));
 				break;
 			}
 			out.println();
+			
+			linha = reader.readLine();
+		} 
+		while(linha != null);
 
-			// System.out.println("Instrução " + cont);
-			// System.out.println("opcode: " + opcode);
-			// System.out.println("rs: " + rs);
-			// System.out.println("rt: " + rt);
-			// System.out.println("rd: " + rd);
-			// System.out.println("shamt: " + shamt);
-			// System.out.println("funct: " + funct);
-			// System.out.println("immediate: " + immediate);
-			// //System.out.println("address: " + address);
-			// System.out.println();
-		}
-
-		// for (String s : listaDeInstrucoes)
-		// writer.println(s);
 		out.close();
 	}
 }
