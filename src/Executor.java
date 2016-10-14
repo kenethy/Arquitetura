@@ -1,12 +1,13 @@
 import java.io.PrintWriter;
 
-/** SUBTITLE
+/**
+ * SUBTITLE 
  * (1) May cause overflow exception 
  * (2) SignExtImm = { 16{immediate[15]}, immediate } 
  * (3) ZeroExtImm = { 16{1b’0}, immediate } 
- * (4) BranchAddr = {14{immediate[15]}, immediate, 2’b0 } 
+ * (4) BranchAddr = { 14{immediate[15]}, immediate, 2’b0 } 
  * (5) JumpAddr = { PC+4[31:28], address, 2’b0 } 
- * (6) Operands considered unsigned numbers (vs. 2’ s comp.) 
+ * (6) Operands considered unsigned numbers (vs. 2’s comp.) 
  * (7) Atomic test&set pair; R[rt] = 1 if pair atomic, 0 if not atomic
  * 
  * @author Kenedy
@@ -96,14 +97,18 @@ public class Executor {
 
 	// div Lo = R[rs]/R[rt]; Hi = R[rs]%R[rt]
 	public void div(int rs, int rt) {
-		this.reg.setRegHi(this.reg.getReg(rs) % this.reg.getReg(rt));
-		this.reg.setRegLo(this.reg.getReg(rs) / this.reg.getReg(rt));
+		if (this.reg.getReg(rt) != 0) {
+			this.reg.setRegHi(this.reg.getReg(rs) % this.reg.getReg(rt));
+			this.reg.setRegLo(this.reg.getReg(rs) / this.reg.getReg(rt));
+		}
 	}
 
 	// divu Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]
 	public void divu(int rs, int rt) {
-		this.reg.setRegHi(this.reg.getReg(rs) % this.reg.getReg(rt));
-		this.reg.setRegLo(this.reg.getReg(rs) / this.reg.getReg(rt));
+		if (this.reg.getReg(rt) != 0) {
+			this.reg.setRegHi(this.reg.getReg(rs) % this.reg.getReg(rt));
+			this.reg.setRegLo(this.reg.getReg(rs) / this.reg.getReg(rt));
+		}
 	}
 
 	// sll R[rd] = R[rt] << shamt
