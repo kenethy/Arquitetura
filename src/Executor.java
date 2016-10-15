@@ -10,7 +10,7 @@ import java.io.PrintWriter;
  * (6) Operands considered unsigned numbers (vs. 2’s comp.) 
  * (7) Atomic test&set pair; R[rt] = 1 if pair atomic, 0 if not atomic
  * 
- * @author Kenedy
+ * @author Ikaro Alef e Kenedy Felipe
  * 
  */
 
@@ -75,7 +75,7 @@ public class Executor {
 		this.reg.setReg(rd, this.reg.getLo());
 	}
 
-	// addu R[rd] = R[rs] + R[rt]
+	// addu R[rd] = R[rs] + R[rt] -------- VERIFICAR O UNSIGNED
 	public void addu(int rd, int rs, int rt) {
 		this.reg.setReg(rd, this.reg.getReg(rs) + this.reg.getReg(rt));
 	}
@@ -150,7 +150,7 @@ public class Executor {
 
 	}
 
-	// addi R[rt] = R[rs] + SignExtImm
+	// addi R[rt] = R[rs] + SignExtImm ----- VERIFICAR A EXTENSÃO DO SINAL
 	public void addi(int rt, int rs, int immed) {
 		this.reg.setReg(rt, this.reg.getReg(rs) + immed);
 	}
@@ -207,11 +207,10 @@ public class Executor {
 		// PC = PC + 4 + BranchAddr
 	}
 
-	// bne if(R[rs]!=R[rt]) PC=PC+4+BranchAddr (4)
+	// bne if(R[rs]!=R[rt]) PC=PC+4+BranchAddr (4) ----- VERIFICAR BRANCHADDR
 	public void bne(int rt, int rs, int immed) {
 		if (this.reg.getReg(rs) != this.reg.getReg(rt))
-			;
-		this.reg.setPC(this.reg.getPC() + 4 + immed);
+			this.reg.setPC(this.reg.getPC() + 4 + immed);
 	}
 
 	// addiu R[rt] = R[rs] + SignExtImm (2)
@@ -234,11 +233,12 @@ public class Executor {
 
 	}
 
-	// jal R[31] = PC + 8; PC = JumpAddr
+	// jal R[31] = PC + 8; PC = JumpAddr -------------- VERIFICAR JUMPADDR
 	public void jal(int address) {
 		this.reg.setReg(31, this.reg.getPC() + 8);
 	}
-
+	
+	//IMPRESSÃO DOS REGISTRADORES
 	public void printReg(PrintWriter out) {
 		for (int i = 0; i < 32; i++)
 			out.print("$" + i + "=" + this.reg.getReg(i) + ";");

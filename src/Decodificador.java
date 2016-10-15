@@ -10,10 +10,9 @@ public class Decodificador {
 	private static PrintWriter out;
 	private static BufferedReader reader;
 
-	// Complemento de 0 a frente do array binário para a quantidade de 32 bits
+	//COMPLEMENTO DE ZEROS A FRENTE DO ARRAY BINÁRIO PARA QUANTIDADE DE 32 BITS
 	public static String complemento32bits(String bin) {
 		int tam = bin.length();
-
 		while (tam < 32) {
 			bin = "0" + bin;
 			tam++;
@@ -39,13 +38,12 @@ public class Decodificador {
 			String rd = linha.substring(16, 21);
 			String shamt = linha.substring(21, 26);
 			String funct = linha.substring(26, 32);
-			String immediate = linha.substring(16, 32); // o complemento a 2 é feito com o cast (short) na
-														// conversão de imediato para int nos cases abaixo
+			String immediate = linha.substring(16, 32); //COMPLEMENTO A 2 É FEITO COM CAST (SHORT) NA CONVERSÃO DO IMEDIATO
 			String address = linha.substring(6, 32);
 			
 			//SignExtImm = { 16{immediate[15]}, immediate }
 			//ZeroExtImm = { 16{1b’0}, immediate }
-			String branchAddr = ""; // BranchAddr = { 14{immediate[15]}, immediate, 2’b0 }
+			// BranchAddr = { 14{immediate[15]}, immediate, 2’b0 }
 			//JumpAddr = { PC+4[31:28], address, 2’b0 }
 			
 			switch (opcode) {
