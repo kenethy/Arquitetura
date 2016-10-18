@@ -18,7 +18,7 @@ import java.io.PrintWriter;
 public class Executor {
 
 	Registradores reg;
-
+	
 	public Executor() {
 		this.reg = new Registradores();
 	}
@@ -201,28 +201,26 @@ public class Executor {
 	}
 
 	// j PC = JumpAddr (5)
-	public void j(int address) {
-
+	public void j(int JumpAddr) {
+		this.reg.setPC(JumpAddr);
 	}
 
 	// bltz if(R[rs] < ZERO) PC = Label
-	public void bltz(int rs, int adress) {
+	public void bltz(int rs, int address) {
 		if (this.reg.getReg(rs) < 0)
-			;
-		// this.PC = address;
+			this.reg.setPC(address);
 	}
 
 	// beq if(R[rs]==R[rt]) PC=PC+4+BranchAddr (4)
-	public void beq(int rt, int rs, int immed) {
+	public void beq(int rt, int rs, int BranchAddr) {
 		if (this.reg.getReg(rs) == this.reg.getReg(rt))
-			;
-		// PC = PC + 4 + BranchAddr
+			this.reg.setPC(this.reg.getPC() + 4 + BranchAddr);
 	}
 
-	// bne if(R[rs]!=R[rt]) PC=PC+4+BranchAddr (4) ----- VERIFICAR BRANCHADDR
-	public void bne(int rt, int rs, int immed) {
+	// bne if(R[rs]!=R[rt]) PC=PC+4+BranchAddr (4)
+	public void bne(int rt, int rs, int BranchAddr) {
 		if (this.reg.getReg(rs) != this.reg.getReg(rt))
-			this.reg.setPC(this.reg.getPC() + 4 + immed);
+			this.reg.setPC(this.reg.getPC() + 4 + BranchAddr);
 	}
 
 	// addiu R[rt] = R[rs] + SignExtImm (2)
@@ -245,10 +243,10 @@ public class Executor {
 
 	}
 
-	// jal R[31] = PC + 8; PC = JumpAddr -------------- VERIFICAR JUMPADDR
-	public void jal(int address) {
+	// jal R[31] = PC + 8; PC = JumpAddr
+	public void jal(int JumpAddr) {
 		this.reg.setReg(31, this.reg.getPC() + 8);
-		this.reg.setPC(0);
+		this.reg.setPC(JumpAddr);
 	}
 	
 	//IMPRESSÃO DOS REGISTRADORES
