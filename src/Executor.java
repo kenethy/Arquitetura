@@ -1,5 +1,6 @@
 import java.io.PrintWriter;
 
+
 /**
  * SUBTITLE 
  * (1) May cause overflow exception 
@@ -87,12 +88,22 @@ public class Executor {
 
 	// mult {Hi,Lo} = R[rs] * R[rt]
 	public void mult(int rs, int rt) {
-
+		long mult = this.reg.getReg(rs) * this.reg.getReg(rt);
+		int maskLo = 0xFFFF;
+		int hi = (int) mult >> 32;
+		int lo = (int) (mult & maskLo);
+		this.reg.setRegHi(hi);
+		this.reg.setRegLo(lo);
 	}
 
 	// multu {Hi,Lo} = R[rs] * R[rt]
 	public void multu(int rs, int rt) {
-
+		long mult = (long) this.reg.getReg(rs) * this.reg.getReg(rt);
+		int maskLo = 0xFFFF;
+		int hi = (int) mult >> 32;
+		int lo = (int) (mult & maskLo);
+		this.reg.setRegHi(hi);
+		this.reg.setRegLo(lo);
 	}
 
 	// div Lo = R[rs]/R[rt]; Hi = R[rs]%R[rt]
@@ -147,7 +158,8 @@ public class Executor {
 
 	// lui R[rt] = {imm, 16’b0}
 	public void lui(int rt, int immed) {
-
+		int value = immed << 16;
+		this.reg.setReg(rt, (value & 0xFFFF0000));
 	}
 
 	// addi R[rt] = R[rs] + SignExtImm ----- VERIFICAR A EXTENSÃO DO SINAL
@@ -197,7 +209,7 @@ public class Executor {
 	public void bltz(int rs, int adress) {
 		if (this.reg.getReg(rs) < 0)
 			;
-		// PC = address;
+		// this.PC = address;
 	}
 
 	// beq if(R[rs]==R[rt]) PC=PC+4+BranchAddr (4)
@@ -236,6 +248,7 @@ public class Executor {
 	// jal R[31] = PC + 8; PC = JumpAddr -------------- VERIFICAR JUMPADDR
 	public void jal(int address) {
 		this.reg.setReg(31, this.reg.getPC() + 8);
+		this.reg.setPC(0);
 	}
 	
 	//IMPRESSÃO DOS REGISTRADORES
