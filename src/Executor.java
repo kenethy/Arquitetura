@@ -63,7 +63,7 @@ public class Executor {
 
 	// jr PC = R[rs]
 	public void jr(int rs) {
-
+		this.reg.setPC(rs);
 	}
 
 	// mfhi R[rd] = Hi
@@ -253,5 +253,7 @@ public class Executor {
 	public void printReg(PrintWriter out) {
 		for (int i = 0; i < 32; i++)
 			out.print("$" + i + "=" + this.reg.getReg(i) + ";");
+		out.print("$Hi=" + this.reg.getHi() + ";");
+		out.print("$Lo=" + this.reg.getLo() + ";");
 	}
 }

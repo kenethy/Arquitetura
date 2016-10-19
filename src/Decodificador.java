@@ -49,7 +49,7 @@ public class Decodificador {
 			int branch = ((ZeroExtImm & 0x8000) == 0 ? ZeroExtImm : ZeroExtImm - 0x10000);
 			int BrancAddr = (branch << 2);
 			// JumpAddr = { PC+4[31:28], address, 2’b0 }
-			int jump = Integer.parseInt(linha) & 0x02FFFFFF;
+			int jump = Integer.parseUnsignedInt(linha, 2) & 0x02FFFFFF;
 			int JumpAddr = (execute.reg.getPC() & 0xF0000000) | (jump << 2);
 
 			switch (opcode) {
