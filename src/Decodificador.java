@@ -41,14 +41,14 @@ public class Decodificador {
 			String immediate = linha.substring(16, 32); // COMPLEMENTO A 2 É FEITO COM CAST (SHORT) NA CONVERSÃO DO IMEDIATO
 			String address = linha.substring(6, 32);
 
-			// SignExtImm = { 16{immediate[15]}, immediate }
 			// ZeroExtImm = { 16{1b’0}, immediate }
-			// BranchAddr = { 14{immediate[15]}, immediate, 2’b0 }
-			// JumpAddr = { PC+4[31:28], address, 2’b0 }
 			int ZeroExtImm = Integer.parseInt(immediate, 2);
+			// SignExtImm = { 16{immediate[15]}, immediate }
 			int SignExtImm = ((ZeroExtImm & 0x8000) == 0 ? ZeroExtImm : ZeroExtImm - 0x10000);
+			// BranchAddr = { 14{immediate[15]}, immediate, 2’b0 }
 			int branch = ((ZeroExtImm & 0x8000) == 0 ? ZeroExtImm : ZeroExtImm - 0x10000);
 			int BrancAddr = (branch << 2);
+			// JumpAddr = { PC+4[31:28], address, 2’b0 }
 			int jump = Integer.parseInt(linha) & 0x02FFFFFF;
 			int JumpAddr = (execute.reg.getPC() & 0xF0000000) | (jump << 2);
 
