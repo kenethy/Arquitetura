@@ -76,33 +76,33 @@ public class Executor {
 		this.reg.setReg(rd, this.reg.getLo());
 	}
 
-	// addu R[rd] = R[rs] + R[rt] -------- VERIFICAR O UNSIGNED
+	// addu R[rd] = R[rs] + R[rt] -------------------------- VERIFICAR UNSIGNED
 	public void addu(int rd, int rs, int rt) {
 		this.reg.setReg(rd, this.reg.getReg(rs) + this.reg.getReg(rt));
 	}
 
-	// subu R[rd] = R[rs] - R[rt]
+	// subu R[rd] = R[rs] - R[rt] -------------------------- VERIFICAR UNSIGNED
 	public void subu(int rd, int rs, int rt) {
 		this.reg.setReg(rd, this.reg.getReg(rs) - this.reg.getReg(rt));
 	}
 
 	// mult {Hi,Lo} = R[rs] * R[rt]
 	public void mult(int rs, int rt) {
-		long mult = this.reg.getReg(rs) * this.reg.getReg(rt);
-		int maskLo = 0xFFFF;
-		int hi = (int) mult >> 32;
-		int lo = (int) (mult & maskLo);
-		this.reg.setRegHi(hi);
+		long mult = (long) this.reg.getReg(rs) * this.reg.getReg(rt);
+		int maskLo = 0xFFFFFFFF;
+		long hi = mult >> 32;
+		int lo = (int) (mult & maskLo);		
+		this.reg.setRegHi((int)hi);
 		this.reg.setRegLo(lo);
 	}
 
-	// multu {Hi,Lo} = R[rs] * R[rt]
+	// multu {Hi,Lo} = R[rs] * R[rt] -------------------------- VERIFICAR UNSIGNED
 	public void multu(int rs, int rt) {
 		long mult = (long) this.reg.getReg(rs) * this.reg.getReg(rt);
-		int maskLo = 0xFFFF;
-		int hi = (int) mult >> 32;
-		int lo = (int) (mult & maskLo);
-		this.reg.setRegHi(hi);
+		int maskLo = 0xFFFFFFFF;
+		long hi = mult >> 32;
+		int lo = (int) (mult & maskLo);		
+		this.reg.setRegHi((int)hi);
 		this.reg.setRegLo(lo);
 	}
 
@@ -114,7 +114,7 @@ public class Executor {
 		}
 	}
 
-	// divu Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]
+	// divu Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]  -------------------------- VERIFICAR UNSIGNED
 	public void divu(int rs, int rt) {
 		if (this.reg.getReg(rt) != 0) {
 			this.reg.setRegHi(this.reg.getReg(rs) % this.reg.getReg(rt));
@@ -158,8 +158,8 @@ public class Executor {
 
 	// lui R[rt] = {imm, 16’b0}
 	public void lui(int rt, int immed) {
-		int value = immed << 16;
-		this.reg.setReg(rt, (value & 0xFFFF0000));
+		int value = (immed << 16);
+		this.reg.setReg(rt, (value));
 	}
 
 	// addi R[rt] = R[rs] + SignExtImm ----- VERIFICAR A EXTENSÃO DO SINAL
@@ -182,7 +182,7 @@ public class Executor {
 
 	// ori R[rt] = R[rs] | ZeroExtImm (3)
 	public void ori(int rt, int rs, int immed) {
-		this.reg.setReg(rt, (this.reg.getReg(rs) & immed));
+		this.reg.setReg(rt, (this.reg.getReg(rs) | immed));
 	}
 
 	// xori R[rt] = R[rs] ^ ZeroExtImm (3)

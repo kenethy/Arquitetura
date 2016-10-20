@@ -10,7 +10,7 @@ public class Decodificador {
 	private static PrintWriter out;
 	private static BufferedReader reader;
 
-	// COMPLEMENTO DE ZEROS A FRENTE DO ARRAY BINÁRIO PARA QUANTIDADE DE 32 BITS
+	// COMPLEMENTO DE ZEROS A FRENTE DO ARRAY BINÃ�RIO PARA QUANTIDADE DE 32 BITS
 	public static String complemento32bits(String bin) {
 		int tam = bin.length();
 		while (tam < 32) {
@@ -21,7 +21,7 @@ public class Decodificador {
 	}
 
 	public static void main(String[] args) throws IOException {
-		FileReader in = new FileReader("in.txt");
+		FileReader in = new FileReader("in2.txt");
 		reader = new BufferedReader(in);
 		FileWriter writer = new FileWriter("out.txt");
 		out = new PrintWriter(new PrintWriter(writer));
@@ -38,17 +38,17 @@ public class Decodificador {
 			String rd = linha.substring(16, 21);
 			String shamt = linha.substring(21, 26);
 			String funct = linha.substring(26, 32);
-			String immediate = linha.substring(16, 32); // COMPLEMENTO A 2 É FEITO COM CAST (SHORT) NA CONVERSÃO DO IMEDIATO
+			String immediate = linha.substring(16, 32); // COMPLEMENTO A 2 Ã‰ FEITO COM CAST (SHORT) NA CONVERSÃƒO DO IMEDIATO
 			String address = linha.substring(6, 32);
 
-			// ZeroExtImm = { 16{1b’0}, immediate }
+			// ZeroExtImm = { 16{1b'0}, immediate }
 			int ZeroExtImm = Integer.parseInt(immediate, 2);
 			// SignExtImm = { 16{immediate[15]}, immediate }
 			int SignExtImm = ((ZeroExtImm & 0x8000) == 0 ? ZeroExtImm : ZeroExtImm - 0x10000);
-			// BranchAddr = { 14{immediate[15]}, immediate, 2’b0 }
+			// BranchAddr = { 14{immediate[15]}, immediate, 2'b0 }
 			int branch = ((ZeroExtImm & 0x8000) == 0 ? ZeroExtImm : ZeroExtImm - 0x10000);
 			int BrancAddr = (branch << 2);
-			// JumpAddr = { PC+4[31:28], address, 2’b0 }
+			// JumpAddr = { PC+4[31:28], address, 2'b0 }
 			int jump = Integer.parseUnsignedInt(linha, 2) & 0x02FFFFFF;
 			int JumpAddr = (execute.reg.getPC() & 0xF0000000) | (jump << 2);
 
@@ -119,7 +119,7 @@ public class Decodificador {
 					break;
 				case "011001": // multu
 					out.print("multu" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2));
-					execute.multu(Integer.parseInt(rs, 2), Integer.parseInt(rt, 2));
+					execute.multu(Integer.parseUnsignedInt(rs, 2), Integer.parseUnsignedInt(rt, 2));
 					break;
 				case "011010": // div
 					out.print("div" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2));
@@ -181,17 +181,17 @@ public class Decodificador {
 				break;
 			case "001100": // andi
 				out.print("andi" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ (short) Integer.parseInt(immediate, 2));
+						+ ZeroExtImm);
 				execute.andi(Integer.parseInt(rt, 2), Integer.parseInt(rs, 2), ZeroExtImm);
 				break;
 			case "001101": // ori
 				out.print("ori" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ (short) Integer.parseInt(immediate, 2));
+						+ ZeroExtImm);
 				execute.ori(Integer.parseInt(rt, 2), Integer.parseInt(rs, 2), ZeroExtImm);
 				break;
 			case "001110": // xori
 				out.print("xori" + " $" + Integer.parseInt(rt, 2) + ", $" + Integer.parseInt(rs, 2) + ", "
-						+ (short) Integer.parseInt(immediate, 2));
+						+ ZeroExtImm);
 				execute.xori(Integer.parseInt(rt, 2), Integer.parseInt(rs, 2), ZeroExtImm);
 				break;
 			case "100011": // lw
