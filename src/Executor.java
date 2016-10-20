@@ -1,4 +1,5 @@
 import java.io.PrintWriter;
+import java.math.BigInteger;
 
 
 /**
@@ -68,12 +69,12 @@ public class Executor {
 
 	// mfhi R[rd] = Hi
 	public void mfhi(int rd) {
-		this.reg.setReg(rd, this.reg.getHi());
+		this.reg.setReg(rd, (int) this.reg.getHi());
 	}
 
 	// mflo R[rd] = Lo
 	public void mflo(int rd) {
-		this.reg.setReg(rd, this.reg.getLo());
+		this.reg.setReg(rd, (int) this.reg.getLo());
 	}
 
 	// addu R[rd] = R[rs] + R[rt] -------------------------- VERIFICAR UNSIGNED
@@ -96,14 +97,24 @@ public class Executor {
 		this.reg.setRegLo(lo);
 	}
 
-	// multu {Hi,Lo} = R[rs] * R[rt] -------------------------- VERIFICAR UNSIGNED
+	// multu {Hi,Lo} = R[rs] * R[rt]
+	// METODO UTILIZADO PARA VERIFICAÇÃO DO UNSIGNED
 	public void multu(int rs, int rt) {
 		long mult = (long) this.reg.getReg(rs) * this.reg.getReg(rt);
-		int maskLo = 0xFFFFFFFF;
-		long hi = mult >> 32;
-		int lo = (int) (mult & maskLo);		
+		
+		// CONVERSÃO DO VALOR DA MULTIPLICAÇÃO PARA BINÁRIO
+		String hex = Long.toBinaryString(mult);
+		
+		// SEPARAÇÃO DOS BITS 32 MAIS SIGNIFICATIVOS EM HI E OS 32 MENOS SIGNIFICATIVOS EM LO
+		String Hi = hex.substring(0, 32);
+		String Lo = hex.substring(32, 64);
+		
+		// NEGAÇÃO PARA QUANDO HOUVE A CONVERSÃO PARA INT NO REGISTRADOR ELE ESTEJA POSITIVO
+		long hi = ~(Long.parseUnsignedLong(Hi, 2)); 
+		long lo = Long.parseUnsignedLong(Lo, 2);
+
 		this.reg.setRegHi((int)hi);
-		this.reg.setRegLo(lo);
+		this.reg.setRegLo((int)lo);
 	}
 
 	// div Lo = R[rs]/R[rt]; Hi = R[rs]%R[rt]

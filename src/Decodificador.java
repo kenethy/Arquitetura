@@ -119,7 +119,7 @@ public class Decodificador {
 					break;
 				case "011001": // multu
 					out.print("multu" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2));
-					execute.multu(Integer.parseUnsignedInt(rs, 2), Integer.parseUnsignedInt(rt, 2));
+					execute.multu(Integer.parseInt(rs, 2), Integer.parseInt(rt, 2));
 					break;
 				case "011010": // div
 					out.print("div" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2));

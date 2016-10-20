@@ -3,8 +3,8 @@ public class Registradores {
 	
 	//DECLARA플O DOS REGISTRADORES
 	private int[] reg;	//ARRAY PARA ADICIONAR OS 32 REGISTRADORES DO MIPS
-	private int regHi;	//REGISTRADOR HI
-	private int regLo;	//REGISTRADOR LO
+	private long regHi;	//REGISTRADOR HI
+	private long regLo;	//REGISTRADOR LO
 	private int PC;		//PC - PROGRAM COUNTER
 
 	public Registradores() {
@@ -20,12 +20,12 @@ public class Registradores {
 	}
 	
 	//GET DA INFORMA플O DO REGISTRADOR LO PARA A FUN플O MFLO
-	public int getLo() {
+	public long getLo() {
 		return regLo;
 	}
 
 	//GET DA INFORMA플O DO REGISTRADOR LO PARA A FUN플O MFHI
-	public int getHi() {
+	public long getHi() {
 		return regHi;
 	}
 	
