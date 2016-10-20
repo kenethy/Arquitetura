@@ -23,6 +23,15 @@ public class Executor {
 	public Executor() {
 		this.reg = new Registradores();
 	}
+	
+	public static String complemento64bits(String bin) {
+		int tam = bin.length();
+		while (tam < 64) {
+			bin = "0" + bin;
+			tam++;
+		}
+		return bin;
+	}
 
 	// add R[rd] = R[rs] + R[rt] (1)
 	public void add(int rd, int rs, int rt) {
@@ -104,12 +113,13 @@ public class Executor {
 		
 		// CONVERSÃO DO VALOR DA MULTIPLICAÇÃO PARA BINÁRIO
 		String hex = Long.toBinaryString(mult);
+		hex = complemento64bits(hex);
 		
 		// SEPARAÇÃO DOS BITS 32 MAIS SIGNIFICATIVOS EM HI E OS 32 MENOS SIGNIFICATIVOS EM LO
 		String Hi = hex.substring(0, 32);
 		String Lo = hex.substring(32, 64);
 		
-		// NEGAÇÃO PARA QUANDO HOUVE A CONVERSÃO PARA INT NO REGISTRADOR ELE ESTEJA POSITIVO
+		// NEGAÇÃO PARA QUANDO HOUVER A CONVERSÃO PARA INT NO REGISTRADOR ELE ESTEJA SEM SINAL
 		long hi = ~(Long.parseUnsignedLong(Hi, 2)); 
 		long lo = Long.parseUnsignedLong(Lo, 2);
 
