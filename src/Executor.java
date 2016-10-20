@@ -183,7 +183,7 @@ public class Executor {
 		this.reg.setReg(rt, (value));
 	}
 
-	// addi R[rt] = R[rs] + SignExtImm ----- VERIFICAR A EXTENSÃO DO SINAL
+	// addi R[rt] = R[rs] + SignExtImm
 	public void addi(int rt, int rs, int immed) {
 		this.reg.setReg(rt, this.reg.getReg(rs) + immed);
 	}
