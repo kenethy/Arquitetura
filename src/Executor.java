@@ -231,7 +231,7 @@ public class Executor {
 		if (this.reg.getReg(rs) < 0)
 			this.reg.setPC(address);
 	}
-
+ 
 	// beq if(R[rs]==R[rt]) PC=PC+4+BranchAddr (4)
 	public void beq(int rt, int rs, int BranchAddr) {
 		if (this.reg.getReg(rs) == this.reg.getReg(rt))
