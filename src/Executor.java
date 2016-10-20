@@ -1,15 +1,12 @@
 import java.io.PrintWriter;
-import java.math.BigInteger;
-
 
 /**
- * SUBTITLE 
- * (1) May cause overflow exception 
+ * SUBTITLE (1) May cause overflow exception 
  * (2) SignExtImm = { 16{immediate[15]}, immediate } 
  * (3) ZeroExtImm = { 16{1b’0}, immediate } 
  * (4) BranchAddr = { 14{immediate[15]}, immediate, 2’b0 } 
- * (5) JumpAddr = { PC+4[31:28], address, 2’b0 } 
- * (6) Operands considered unsigned numbers (vs. 2’s comp.) 
+ * (5) JumpAddr = {PC+4[31:28], address, 2’b0 } 
+ * (6) Operands considered unsigned numbers (vs.* 2’s comp.) 
  * (7) Atomic test&set pair; R[rt] = 1 if pair atomic, 0 if not atomic
  * 
  * @author Ikaro Alef e Kenedy Felipe
@@ -19,14 +16,14 @@ import java.math.BigInteger;
 public class Executor {
 
 	Registradores reg;
-	
+
 	public Executor() {
 		this.reg = new Registradores();
 	}
-	
-	public static String complemento64bits(String bin) {
+
+	public static String complementoBits(String bin, int bits) {
 		int tam = bin.length();
-		while (tam < 64) {
+		while (tam < bits) {
 			bin = "0" + bin;
 			tam++;
 		}
@@ -86,12 +83,12 @@ public class Executor {
 		this.reg.setReg(rd, (int) this.reg.getLo());
 	}
 
-	// addu R[rd] = R[rs] + R[rt] -------------------------- VERIFICAR UNSIGNED
+	// addu R[rd] = R[rs] + R[rt]
 	public void addu(int rd, int rs, int rt) {
 		this.reg.setReg(rd, this.reg.getReg(rs) + this.reg.getReg(rt));
 	}
 
-	// subu R[rd] = R[rs] - R[rt] -------------------------- VERIFICAR UNSIGNED
+	// subu R[rd] = R[rs] - R[rt]
 	public void subu(int rd, int rs, int rt) {
 		this.reg.setReg(rd, this.reg.getReg(rs) - this.reg.getReg(rt));
 	}
@@ -101,30 +98,42 @@ public class Executor {
 		long mult = (long) this.reg.getReg(rs) * this.reg.getReg(rt);
 		int maskLo = 0xFFFFFFFF;
 		long hi = mult >> 32;
-		int lo = (int) (mult & maskLo);		
-		this.reg.setRegHi((int)hi);
+		int lo = (int) (mult & maskLo);
+		this.reg.setRegHi((int) hi);
 		this.reg.setRegLo(lo);
 	}
 
 	// multu {Hi,Lo} = R[rs] * R[rt]
 	// METODO UTILIZADO PARA VERIFICAÇÃO DO UNSIGNED
 	public void multu(int rs, int rt) {
-		long mult = (long) this.reg.getReg(rs) * this.reg.getReg(rt);
-		
+
+		// REGISTRADOR RS
+		String hex = Integer.toBinaryString(this.reg.getReg(rs));
+		hex = complementoBits(hex, 32);
+		long regRs = Long.parseUnsignedLong(hex, 2);
+
+		// REGISTRADOR RT
+		hex = Integer.toBinaryString(this.reg.getReg(rt));
+		hex = complementoBits(hex, 32);
+		long regRt = Long.parseUnsignedLong(hex, 2);
+
+		// MULTIPLICAÇÃO
+		long mult = (long) regRs * regRt;
+
 		// CONVERSÃO DO VALOR DA MULTIPLICAÇÃO PARA BINÁRIO
-		String hex = Long.toBinaryString(mult);
-		hex = complemento64bits(hex);
-		
+		hex = Long.toBinaryString(mult);
+		hex = complementoBits(hex, 64);
+
 		// SEPARAÇÃO DOS BITS 32 MAIS SIGNIFICATIVOS EM HI E OS 32 MENOS SIGNIFICATIVOS EM LO
 		String Hi = hex.substring(0, 32);
 		String Lo = hex.substring(32, 64);
-		
+
 		// NEGAÇÃO PARA QUANDO HOUVER A CONVERSÃO PARA INT NO REGISTRADOR ELE ESTEJA SEM SINAL
-		long hi = ~(Long.parseUnsignedLong(Hi, 2)); 
+		long hi = Long.parseUnsignedLong(Hi, 2);
 		long lo = Long.parseUnsignedLong(Lo, 2);
 
-		this.reg.setRegHi((int)hi);
-		this.reg.setRegLo((int)lo);
+		this.reg.setRegHi((int) hi);
+		this.reg.setRegLo((int) lo);
 	}
 
 	// div Lo = R[rs]/R[rt]; Hi = R[rs]%R[rt]
@@ -135,11 +144,20 @@ public class Executor {
 		}
 	}
 
-	// divu Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]  -------------------------- VERIFICAR UNSIGNED
+	// divu Lo=R[rs]/R[rt]; Hi=R[rs]%R[rt]
 	public void divu(int rs, int rt) {
 		if (this.reg.getReg(rt) != 0) {
-			this.reg.setRegHi(this.reg.getReg(rs) % this.reg.getReg(rt));
-			this.reg.setRegLo(this.reg.getReg(rs) / this.reg.getReg(rt));
+
+			String hex = Integer.toBinaryString(this.reg.getReg(rt));
+			hex = complementoBits(hex, 32);
+			long regRT = Long.parseUnsignedLong(hex, 2);
+
+			hex = Integer.toBinaryString(this.reg.getReg(rs));
+			hex = complementoBits(hex, 32);
+			long regRS = Long.parseUnsignedLong(hex, 2);
+
+			this.reg.setRegHi((int) (regRS % regRT));
+			this.reg.setRegLo((int) (regRS / regRT));
 		}
 	}
 
@@ -231,7 +249,7 @@ public class Executor {
 		if (this.reg.getReg(rs) < 0)
 			this.reg.setPC(address);
 	}
- 
+
 	// beq if(R[rs]==R[rt]) PC=PC+4+BranchAddr (4)
 	public void beq(int rt, int rs, int BranchAddr) {
 		if (this.reg.getReg(rs) == this.reg.getReg(rt))
@@ -269,12 +287,14 @@ public class Executor {
 		this.reg.setReg(31, this.reg.getPC() + 8);
 		this.reg.setPC(JumpAddr);
 	}
-	
-	//IMPRESSÃO DOS REGISTRADORES
+
+	// IMPRESSÃO DOS REGISTRADORES
 	public void printReg(PrintWriter out) {
-		for (int i = 0; i < 32; i++)
-			out.print("$" + i + "=" + this.reg.getReg(i) + ";");
+		for (int i = 0; i < 32; i++){
+			if(this.reg.getReg(i) != 0)
+				out.print("$" + i + "=" + this.reg.getReg(i) + ";");
+		}
 		out.print("$Hi=" + this.reg.getHi() + ";");
-		out.print("$Lo=" + this.reg.getLo() + ";");
+		out.println("$Lo=" + this.reg.getLo() + ";");
 	}
 }
