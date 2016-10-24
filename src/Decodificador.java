@@ -21,7 +21,7 @@ public class Decodificador {
 	}
 
 	public static void main(String[] args) throws IOException {
-		FileReader in = new FileReader("in3.txt");
+		FileReader in = new FileReader("in.txt");
 		reader = new BufferedReader(in);
 		FileWriter writer = new FileWriter("out.txt");
 		out = new PrintWriter(new PrintWriter(writer));

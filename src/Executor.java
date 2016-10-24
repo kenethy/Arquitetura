@@ -291,10 +291,10 @@ public class Executor {
 	// IMPRESSÃO DOS REGISTRADORES
 	public void printReg(PrintWriter out) {
 		for (int i = 0; i < 32; i++){
-			if(this.reg.getReg(i) != 0)
+			//if(this.reg.getReg(i) != 0)
 				out.print("$" + i + "=" + this.reg.getReg(i) + ";");
 		}
-		out.print("$Hi=" + this.reg.getHi() + ";");
-		out.println("$Lo=" + this.reg.getLo() + ";");
+		//out.print("$Hi=" + this.reg.getHi() + ";");
+		//out.println("$Lo=" + this.reg.getLo() + ";");
 	}
 }
