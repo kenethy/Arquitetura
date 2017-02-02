@@ -231,12 +231,12 @@ public class Executor {
 
 	// lw R[rt] = M[R[rs]+SignExtImm]
 	public void lw(int rt, int immed, int rs) {
-
+		
 	}
 
 	// sw M[R[rs]+SignExtImm] = R[rt]
 	public void sw(int rt, int immed, int rs) {
-
+		
 	}
 
 	// j PC = JumpAddr (5)
