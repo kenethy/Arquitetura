@@ -7,7 +7,7 @@ import java.io.PrintWriter;
  * (4) BranchAddr = { 14{immediate[15]}, immediate, 2’b0 } 
  * (5) JumpAddr = {PC+4[31:28], address, 2’b0 } 
  * (6) Operands considered unsigned numbers (vs.* 2’s comp.) 
- * (7) Atomic test&set pair; R[rt] = 1 if pair atomic, 0 if not atomic
+ * (7) Atomic test & set pair; R[rt] = 1 if pair atomic, 0 if not atomic
  * 
  * @author Ikaro Alef e Kenedy Felipe
  * 
@@ -176,17 +176,17 @@ public class Executor {
 		this.reg.setReg(rd, (this.reg.getReg(rt) >>> shamt));
 	}
 
-	// R[rd] = R[rt] << R[rs]
+	// sllv R[rd] = R[rt] << R[rs]
 	public void sllv(int rd, int rt, int rs) {
 		this.reg.setReg(rd, (this.reg.getReg(rt) << this.reg.getReg(rs)));
 	}
 
-	// R[rd] = R[rt] >> R[rs]
+	// srlv R[rd] = R[rt] >> R[rs]
 	public void srlv(int rd, int rt, int rs) {
 		this.reg.setReg(rd, (this.reg.getReg(rt) >> this.reg.getReg(rs)));
 	}
 
-	// R[rd] = R[rt] >>> R[rs]
+	// srav R[rd] = R[rt] >>> R[rs]
 	public void srav(int rd, int rt, int rs) {
 		this.reg.setReg(rd, (this.reg.getReg(rt) >>> this.reg.getReg(rs)));
 	}
@@ -230,36 +230,36 @@ public class Executor {
 	}
 
 	// lw R[rt] = M[R[rs]+SignExtImm]
-	public void lw(int rt, int immed, int rs) {
-		
+	public void lw(int rt, int immed, int rs) throws Exception {
+		this.reg.setMemory(rt, this.reg.getMemory(rs+immed));
 	}
 
 	// sw M[R[rs]+SignExtImm] = R[rt]
 	public void sw(int rt, int immed, int rs) {
-		
+		this.reg.addMemory(rs+immed, rt);
 	}
 
 	// j PC = JumpAddr (5)
-	public void j(int JumpAddr) {
-		this.reg.setPC(JumpAddr);
+	public void j(int immediate) {
+		this.reg.setPC((immediate*4) - 4);
 	}
 
 	// bltz if(R[rs] < ZERO) PC = Label
-	public void bltz(int rs, int address) {
+	public void bltz(int rs, int immediate) {
 		if (this.reg.getReg(rs) < 0)
-			this.reg.setPC(address);
+			this.reg.setPC((this.reg.getPC() + immediate)*4);
 	}
 
 	// beq if(R[rs]==R[rt]) PC=PC+4+BranchAddr (4)
-	public void beq(int rt, int rs, int BranchAddr) {
+	public void beq(int rt, int rs, int immediate) {
 		if (this.reg.getReg(rs) == this.reg.getReg(rt))
-			this.reg.setPC(this.reg.getPC() + 4 + BranchAddr);
+			this.reg.setPC((this.reg.getPC() + immediate)*4);
 	}
 
 	// bne if(R[rs]!=R[rt]) PC=PC+4+BranchAddr (4)
-	public void bne(int rt, int rs, int BranchAddr) {
+	public void bne(int rt, int rs, int immediate) {
 		if (this.reg.getReg(rs) != this.reg.getReg(rt))
-			this.reg.setPC(this.reg.getPC() + 4 + BranchAddr);
+			this.reg.setPC((this.reg.getPC() + immediate)*4);
 	}
 
 	// addiu R[rt] = R[rs] + SignExtImm (2)
@@ -269,23 +269,23 @@ public class Executor {
 
 	// lb R[rt]={24’b0,M[R[rs] + SignExtImm](7:0)}
 	public void lb(int rt, int immed, int rs) {
-
+		
 	}
 
 	// lbu R[rt]={24’b0,M[R[rs] + SignExtImm](7:0)}
 	public void lbu(int rt, int immed, int rs) {
-
+		
 	}
 
 	// sb M[R[rs]+SignExtImm](7:0) = R[rt](7:0)
 	public void sb(int rt, int immed, int rs) {
-
+		
 	}
 
-	// jal R[31] = PC + 8; PC = JumpAddr
-	public void jal(int JumpAddr) {
-		this.reg.setReg(31, this.reg.getPC() + 8);
-		this.reg.setPC(JumpAddr);
+	// jal 
+	public void jal(int immediate) {
+		this.reg.setReg(31, ((immediate*4) - 4));
+		this.reg.setPC(immediate);
 	}
 
 	// IMPRESSÃO DOS REGISTRADORES

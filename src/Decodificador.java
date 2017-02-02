@@ -20,7 +20,7 @@ public class Decodificador {
 		return bin;
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws NumberFormatException, Exception {
 		
 		FileReader in = new FileReader("entrada.txt");
 		reader = new BufferedReader(in);
@@ -39,7 +39,7 @@ public class Decodificador {
 			String rd = linha.substring(16, 21);
 			String shamt = linha.substring(21, 26);
 			String funct = linha.substring(26, 32);
-			String immediate = linha.substring(16, 32); // COMPLEMENTO A 2 Ã‰ FEITO COM CAST (SHORT) NA CONVERSÃƒO DO IMEDIATO
+			String immediate = linha.substring(16, 32); // COMPLEMENTO A 2 É FEITO COM CAST (SHORT) NA CONVERSÃO DO IMEDIATO
 			String address = linha.substring(6, 32);
 
 			// ZeroExtImm = { 16{1b'0}, immediate }
@@ -207,11 +207,11 @@ public class Decodificador {
 				break;
 			case "000010": // j
 				out.print("j " + Integer.parseInt(address, 2));
-				execute.j(JumpAddr);
+				execute.j(Integer.parseInt(immediate, 2));
 				break;
 			case "000001": // bltz
 				out.print("bltz" + " $" + Integer.parseInt(rs, 2) + ", " + (short) Integer.parseInt(address, 2));
-				execute.bltz(Integer.parseInt(rs, 2), Integer.parseInt(address, 2));
+				execute.bltz(Integer.parseInt(rs, 2), Integer.parseInt(immediate, 2));
 				break;
 			case "000100": // beq
 				out.print("beq" + " $" + Integer.parseInt(rs, 2) + ", $" + Integer.parseInt(rt, 2) + ", "
@@ -245,7 +245,7 @@ public class Decodificador {
 				break;
 			case "000011": // jal
 				out.print("jal " + Integer.parseInt(address, 2));
-				execute.jal(JumpAddr);
+				execute.jal(Integer.parseInt(immediate, 2));
 				break;
 			}
 			out.println();
