@@ -70,7 +70,8 @@ public class Executor {
 
 	// jr PC = R[rs]
 	public void jr(int rs) {
-		this.reg.setPC(rs);
+		System.out.println("RS: "+this.reg.getReg(rs));
+		this.reg.setPC(this.reg.getReg(rs) - 4);
 	}
 
 	// mfhi R[rd] = Hi
@@ -236,31 +237,39 @@ public class Executor {
 
 	// sw M[R[rs]+SignExtImm] = R[rt]
 	public void sw(int rt, int immed, int rs) throws Exception {
-		System.out.println("rs: " + rs + "imediado: " + immed);
-		this.reg.addMemory(this.reg.getReg(rs)+immed, this.reg.getReg(rt));
+		this.reg.addMemory(this.reg.getReg(rs) + immed, this.reg.getReg(rt));
 	}
 
 	// j PC = JumpAddr (5)
-	public void j(int immediate) {
-		this.reg.setPC((immediate*4) - 4);
+	public void j(int JumpAddr) {
+		this.reg.setPC(JumpAddr);
 	}
 
 	// bltz if(R[rs] < ZERO) PC = Label
-	public void bltz(int rs, int immediate) {
-		if (this.reg.getReg(rs) < 0)
-			this.reg.setPC((this.reg.getPC() + immediate)*4);
+	public boolean bltz(int rs, int immediate) {
+		if (this.reg.getReg(rs) < 0){
+			this.reg.setPC((this.reg.getPC() + immediate));
+			return true;
+		}
+		return false;
 	}
 
 	// beq if(R[rs]==R[rt]) PC=PC+4+BranchAddr (4)
-	public void beq(int rt, int rs, int immediate) {
-		if (this.reg.getReg(rs) == this.reg.getReg(rt))
-			this.reg.setPC((this.reg.getPC() + immediate)*4);
+	public boolean beq(int rt, int rs, int BranchAddr) {
+		if (this.reg.getReg(rs) == this.reg.getReg(rt)) {
+			this.reg.setPC(this.reg.getPC() + 4 + BranchAddr);
+			return true;
+		}
+		return false;
 	}
 
 	// bne if(R[rs]!=R[rt]) PC=PC+4+BranchAddr (4)
-	public void bne(int rt, int rs, int immediate) {
-		if (this.reg.getReg(rs) != this.reg.getReg(rt))
-			this.reg.setPC((this.reg.getPC() + immediate)*4);
+	public boolean bne(int rt, int rs, int BranchAddr) {
+		if (this.reg.getReg(rs) != this.reg.getReg(rt)) {
+			this.reg.setPC(this.reg.getPC() + 4 + BranchAddr);
+			return true;
+		}
+		return false;
 	}
 
 	// addiu R[rt] = R[rs] + SignExtImm (2)
@@ -283,10 +292,10 @@ public class Executor {
 		
 	}
 
-	// jal 
-	public void jal(int immediate) {
-		this.reg.setReg(31, ((immediate*4) - 4));
-		this.reg.setPC(immediate);
+	// jal R[31]=PC+8;PC=JumpAddr
+	public void jal(int JumpAddr) {
+		this.reg.setReg(31, (this.reg.getPC()+8));
+		this.reg.setPC(JumpAddr);
 	}
 
 	// IMPRESSÃO DOS REGISTRADORES
