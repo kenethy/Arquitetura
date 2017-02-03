@@ -7,14 +7,13 @@ public class Registradores {
 	private long regLo; // REGISTRADOR LO
 	private int PC; // PC - PROGRAM COUNTER
 	private int[] memory;
-	private final static int base = 8192;
 
 	public Registradores() {
 		this.reg = new int[32];
 		this.regHi = 0;
 		this.regLo = 0;
 		this.PC = 0;
-		this.memory = new int[8194];
+		this.memory = new int[8194]; // MEMÓRIA
 	}
 
 	// GET DA INFORMAÇÃO EXISTENTE EM UM DOS 32 REGISTRADORES
@@ -58,27 +57,14 @@ public class Registradores {
 	}
 
 	public void addMemory(int index, int value) {
-		//if (index % base == 0) {
-			//index /= base;
-			memory[index] = value;
-		//}
+		memory[index] = value;
 	}
 
 	public void setMemory(int index, int value) {
-		//if (index % base == 0) {
-			index /= base;
-			memory[index] = value;
-		//}
+		memory[index] = value;
 	}
 
-	public int getMemory(int index) throws Exception{
-		//if(index % base == 0){
-		for (int i =0; i<8193; i++){
-			System.out.println(memory[i]);
-		}
-			//index /= base;
-			return memory[index]; 
-		//}
-		//else throw new Exception("Erro na Memória");
+	public int getMemory(int index) throws Exception {
+		return memory[index];
 	}
 }
