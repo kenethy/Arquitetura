@@ -62,8 +62,6 @@ public class Decodificador {
 			// JumpAddr = { PC+4[31:28], address, 2'b0 }
 			int jump = Integer.parseUnsignedInt(instrucao.get(execute.reg.getPC()/4), 2) & 0x02FFFFFF;
 			int JumpAddr = (execute.reg.getPC() & 0xF0000000) | (jump << 2);
-			System.out.println("Jump: "+jump);
-			System.out.println("JumpAddr: "+JumpAddr);
 
 			switch (opcode) {
 			// OPCODE = 0
@@ -250,7 +248,6 @@ public class Decodificador {
 				break;
 			case "000010": // j
 				out.print("j " + Integer.parseInt(address, 2));
-				System.out.println("J: " + JumpAddr);
 				execute.j(JumpAddr);
 				jumper = true;
 				break;

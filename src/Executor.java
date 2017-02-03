@@ -70,7 +70,6 @@ public class Executor {
 
 	// jr PC = R[rs]
 	public void jr(int rs) {
-		System.out.println("RS: "+this.reg.getReg(rs));
 		this.reg.setPC(this.reg.getReg(rs) - 4);
 	}
 
