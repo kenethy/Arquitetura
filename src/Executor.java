@@ -231,12 +231,13 @@ public class Executor {
 
 	// lw R[rt] = M[R[rs]+SignExtImm]
 	public void lw(int rt, int immed, int rs) throws Exception {
-		this.reg.setMemory(rt, this.reg.getMemory(rs+immed));
+		this.reg.setReg(rt, this.reg.getMemory(this.reg.getReg(rs)+immed));
 	}
 
 	// sw M[R[rs]+SignExtImm] = R[rt]
-	public void sw(int rt, int immed, int rs) {
-		this.reg.addMemory(rs+immed, rt);
+	public void sw(int rt, int immed, int rs) throws Exception {
+		System.out.println("rs: " + rs + "imediado: " + immed);
+		this.reg.addMemory(this.reg.getReg(rs)+immed, this.reg.getReg(rt));
 	}
 
 	// j PC = JumpAddr (5)
