@@ -14,7 +14,7 @@ public class Registradores {
 		this.regHi = 0;
 		this.regLo = 0;
 		this.PC = 0;
-		this.memory = new int[8193];
+		this.memory = new int[8194];
 	}
 
 	// GET DA INFORMAÇÃO EXISTENTE EM UM DOS 32 REGISTRADORES
