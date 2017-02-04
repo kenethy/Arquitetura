@@ -18,3 +18,5 @@ nop
 label1: addi $3, $3, -1
 jr $31
 label2: lw $5, 0($4)
+
+
