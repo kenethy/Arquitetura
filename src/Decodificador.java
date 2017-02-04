@@ -25,13 +25,14 @@ public class Decodificador {
 		
 		FileReader in = new FileReader("entrada.txt");
 		reader = new BufferedReader(in);
-		FileWriter writer = new FileWriter("out.txt");
+		FileWriter writer = new FileWriter("saida.txt");
 		out = new PrintWriter(new PrintWriter(writer));
+		
+		ArrayList<String> instrucao = new ArrayList<String>();
 		Executor execute = new Executor();
 		String linha = reader.readLine();
 		boolean jumper = false;
-		ArrayList<String> instrucao = new ArrayList<String>();
-		
+				
 		do {
 			linha = new BigInteger(linha, 16).toString(2);
 			linha = complemento32bits(linha);
@@ -40,9 +41,6 @@ public class Decodificador {
 		} while (linha != null);
 
 		do {
-//			linha = new BigInteger(linha, 16).toString(2);
-//			linha = complemento32bits(linha);
-
 			String opcode = instrucao.get(execute.reg.getPC()/4).substring(0, 6);
 			String rs = instrucao.get(execute.reg.getPC()/4).substring(6, 11);
 			String rt = instrucao.get(execute.reg.getPC()/4).substring(11, 16);
@@ -274,19 +272,19 @@ public class Decodificador {
 			case "100000": // lb
 				out.print("lb" + " $" + Integer.parseInt(rt, 2) + ", " + (short) Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
-				execute.lb(Integer.parseInt(rt, 2), (SignExtImm & 0x000000FF), Integer.parseInt(rs, 2));
+				execute.lb(Integer.parseInt(rt, 2), SignExtImm, Integer.parseInt(rs, 2));
 				jumper = false;
 				break;
 			case "100100": // lbu
 				out.print("lbu" + " $" + Integer.parseInt(rt, 2) + ", " + (short) Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
-				execute.lbu(Integer.parseInt(rt, 2), (SignExtImm & 0x000000FF), Integer.parseInt(rs, 2));
+				execute.lbu(Integer.parseInt(rt, 2), SignExtImm, Integer.parseInt(rs, 2));
 				jumper = false;
 				break;
 			case "101000": // sb
 				out.print("sb" + " $" + Integer.parseInt(rt, 2) + ", " + (short) Integer.parseInt(immediate, 2) + "($"
 						+ Integer.parseInt(rs, 2) + ")");
-				execute.sb(Integer.parseInt(rt, 2), (SignExtImm & 0x000000FF), Integer.parseInt(rs, 2));
+				execute.sb(Integer.parseInt(rt, 2), SignExtImm, Integer.parseInt(rs, 2));
 				jumper = false;
 				break;
 			case "000011": // jal
@@ -299,14 +297,14 @@ public class Decodificador {
 			if (!jumper)
 				execute.reg.setPC(execute.reg.getPC()+4);
 			
-//			System.out.println(execute.reg.getPC());
+			//System.out.println(execute.reg.getPC());
 					
 			out.println();
 			execute.printReg(out);
 			if(execute.reg.getPC() < (instrucao.size()*4))
 				out.println();			
 			
-//			System.out.println("Instrução: "+ instrucao.size());
+			//System.out.println("Instrução: "+ instrucao.size());
 			
 		} while (execute.reg.getPC() < (instrucao.size()*4));
 		out.close();

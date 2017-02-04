@@ -70,7 +70,7 @@ public class Executor {
 
 	// jr PC = R[rs]
 	public void jr(int rs) {
-		this.reg.setPC(this.reg.getReg(rs) - 4);
+		this.reg.setPC(this.reg.getReg(rs));
 	}
 
 	// mfhi R[rd] = Hi
@@ -276,24 +276,34 @@ public class Executor {
 		this.reg.setReg(rt, this.reg.getReg(rs) + immed);
 	}
 
-	// lb R[rt]={24’b0,M[R[rs] + SignExtImm](7:0)}
-	public void lb(int rt, int immed, int rs) {
-		
+	// lb 
+	public void lb(int rt, int immed, int rs) throws Exception {
+		int memory = this.reg.getMemory(this.reg.getReg(rs)+immed);
+		if((memory & 0x80) != 128)
+			this.reg.setReg(rt, (memory & 0x000000FF));
+		else
+			this.reg.setReg(rt, (memory | 0xFFFFFF00));
 	}
 
 	// lbu R[rt]={24’b0,M[R[rs] + SignExtImm](7:0)}
-	public void lbu(int rt, int immed, int rs) {
-		
+	public void lbu(int rt, int immed, int rs) throws Exception {
+		this.reg.setReg(rt, (this.reg.getMemory((this.reg.getReg(rs)+immed)) & 0x000000FF));
 	}
 
 	// sb M[R[rs]+SignExtImm](7:0) = R[rt](7:0)
-	public void sb(int rt, int immed, int rs) {
+	public void sb(int rt, int immed, int rs) throws Exception {
+		int index = (this.reg.getReg(rs) + immed);
+		int value = this.reg.getReg(rt) & 0x000000FF;
+		int memory = this.reg.getMemory(index);
 		
+		value = value << immed*8; // DESLOCAMENTO EM BITS
+		value = value | memory;
+		this.reg.addMemory(index, value);
 	}
 
 	// jal R[31]=PC+8;PC=JumpAddr
 	public void jal(int JumpAddr) {
-		this.reg.setReg(31, (this.reg.getPC()+8));
+		this.reg.setReg(31, (this.reg.getPC()+4));
 		this.reg.setPC(JumpAddr);
 	}
 

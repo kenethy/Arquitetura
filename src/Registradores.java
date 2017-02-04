@@ -13,7 +13,7 @@ public class Registradores {
 		this.regHi = 0;
 		this.regLo = 0;
 		this.PC = 0;
-		this.memory = new int[10000]; // MEMÓRIA
+		this.memory = new int[4096]; // MEMÓRIA
 	}
 
 	// GET DA INFORMAÇÃO EXISTENTE EM UM DOS 32 REGISTRADORES
@@ -56,15 +56,15 @@ public class Registradores {
 		this.PC = PC;
 	}
 
+	// ADICIONAR VALOR NA MEMÓRIA
 	public void addMemory(int index, int value) {
+		index /= 4;
 		memory[index] = value;
 	}
 
-	public void setMemory(int index, int value) {
-		memory[index] = value;
-	}
-
+	// PEGAR VALOR NA MEMÓRIA
 	public int getMemory(int index) throws Exception {
+		index /= 4;
 		return memory[index];
 	}
 }
